@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <title>CPU Scheduling Simulator</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Time Slice</h1>
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-switch" class="theme-switch">
+                <label for="theme-switch" class="theme-switch-label">
+                    <span class="sr-only">Toggle theme</span>
+                </label>
+            </div>
+        </header>
+
+        <!-- Input Form -->
+        <div class="card form-card">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="algorithm">Select Algorithm</label>
+                    <div class="select-wrapper">
+                        <select id="algorithm" onchange="handleAlgorithmChange()">
+                            <option value="fcfs">First Come First Serve (FCFS)</option>
+                            <option value="sjfNonPreemptive">Shortest Job First (Non-Preemptive)</option>
+                            <option value="sjfPreemptive">Shortest Job First (Preemptive)</option>
+                            <option value="ljfNonPreemptive">Longest Job First (Non-Preemptive)</option>
+                            <option value="ljfPreemptive">Longest Job First (Preemptive)</option>
+                            <option value="priorityNonPreemptive">Priority (Non-Preemptive)</option>
+                            <option value="priorityPreemptive">Priority (Preemptive)</option>
+                            <option value="roundRobin">Round Robin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="quantum-container" style="display: none;">
+                    <label for="time_quantum">Time Quantum</label>
+                    <input type="number" id="time_quantum" min="1" value="2">
+                </div>
+
+                <div class="form-group">
+                    <label for="arrival_time">Arrival Time</label>
+                    <input type="text" id="arrival_time" placeholder="e.g. 0 1 2 3">
+                    <small>Space-separated values</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="burst_time">Burst Time</label>
+                    <input type="text" id="burst_time" placeholder="e.g. 5 3 8 6">
+                    <small>Space-separated values</small>
+                </div>
+
+                <div class="form-group" id="priority-container" style="display: none;">
+                    <label for="priority">Priority Values</label>
+                    <input type="text" id="priority" placeholder="e.g. 2 1 4 3">
+                    <small>Lower value = Higher priority</small>
+                </div>
+
+                <div class="button-container">
+                    <button type="button" class="button-primary" onclick="calculateScheduling()">Calculate</button>
+                    <button type="button" class="button-secondary" onclick="resetForm()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="results-container" style="display: none;">
+            <div class="results-header">
+                <h2>Scheduling Results</h2>
+            </div>
+
+            <div class="card results-box">
+                <!-- Metrics Cards -->
+                <div class="metrics-container">
+                    <div class="metric-card">
+                        <div class="metric-title">Average Waiting Time</div>
+                        <div class="metric-value" id="avg_waiting_time">0.00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Average Turnaround Time</div>
+                        <div class="metric-value" id="avg_turnaround_time">0.00</div>
+                    </div>
+                </div>
+
+                <!-- Process Table -->
+                <div id="process-table" class="table-container"></div>
+
+                <!-- Gantt Chart -->
+                <div class="gantt-section">
+                    <h3>Gantt Chart</h3>
+                    <div class="gantt-container">
+                        <div id="gantt-chart" class="gantt"></div>
+                        <div id="gantt-timeline" class="gantt-timeline"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Time Slice © 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme toggling functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeSwitch = document.getElementById('theme-switch');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeSwitch.checked = true;
+            } else {
+                document.body.classList.add('light-theme');
+            }
+               
+            // Handle theme toggle
+            themeSwitch.addEventListener('change', () => {
+                if (themeSwitch.checked) {
+                    document.body.classList.replace('light-theme', 'dark-theme');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.replace('dark-theme', 'light-theme');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
